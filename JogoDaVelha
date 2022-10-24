@@ -1,0 +1,136 @@
+///////////////// PROPOSTA DE EXERCICIO 02 - JOGO DA VELHA /////////////////
+// Adan Viana        - 163335
+// Arthur Losano     - 163564
+// Bruno Marques     - 163633
+// Livia Ferreira    - 163898
+// Lucas Apolinario  - 163913
+
+#include <stdio.h>
+
+int drawTable(char x[3][3]) {
+  int c = 0, l = 0;
+  for (int z = 1; z <= 5; z++) {
+    if (z % 2 != 0) {
+      c = 0;
+      for (int w = 1; w <= 5; w++) {
+        if (w % 2 == 0) {
+          printf(" | ");
+        } else {
+          printf("%c", x[l][c]);
+          c++;
+        };
+      }
+      l++;
+      printf("\n");
+    }
+
+    else {
+      printf("----------\n");
+    }
+  }
+  return 0;
+}
+
+int checkWin(char x[3][3],char V) {
+  
+  if ((x[0][0] == x[1][1] && x[1][1] == x[2][2] && x[1][1] == V) ||
+      (x[0][2] == x[1][1] && x[1][1] == x[2][0] && x[1][1] == V) ||
+      (x[0][0] == x[0][1] && x[0][1] == x[0][2] && x[0][1] == V) ||
+      (x[1][0] == x[1][1] && x[1][1] == x[1][2] && x[1][1] == V) ||
+      (x[2][0] == x[2][1] && x[2][1] == x[2][2] && x[2][1] == V) ||
+      (x[0][0] == x[1][0] && x[1][0] == x[2][0] && x[1][0] == V) ||
+      (x[0][1] == x[1][1] && x[1][1] == x[2][1] && x[1][1] == V) ||
+      (x[0][2] == x[1][2] && x[0][2] == x[2][2] && x[0][2] == V)) { 
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+int verifyPlay1(char x[3][3], char J1[12]) {
+  
+  int L, C;
+  do{
+  printf("\nVez de: %s\n",J1);
+  printf("Linha que deseja jogar (0, 1 ou 2): ");
+  scanf("%i", &L);
+  printf("Coluna que deseja jogar (0, 1 ou 2): ");
+  scanf("%i", &C);
+  printf("\n");
+    
+  if(L >= 3 || L < 0 || C >= 3 || C < 0){
+  printf("\nVocê deve digitar entre 0,1 e 2. Jogue novamente!\n");
+    }  
+  else if(x[L][C]!= ' '){
+    printf("\nVocê não pode jogar aqui, escolha uma nova casa.\n");
+  }
+  }while(x[L][C]!= ' ');
+  x[L][C] = 'X';
+  return 0;
+  }
+
+
+int verifyPlay2(char x[3][3], char J2[12]) {
+  
+  int L, C; 
+  do{
+  printf("\nVez de: %s\n",J2);
+  printf("Linha que deseja jogar: ");
+  scanf("%i", &L);
+  printf("Coluna que deseja jogar: ");
+  scanf("%i", &C);
+  printf("\n");
+    
+  if(L >= 3 || L < 0 || C >= 3 || C < 0){
+  printf("\nVocê deve digitar entre 0,1 e 2. Jogue novamente!\n");
+    }  
+  if(x[L][C]!= ' '){
+    printf("\nVocê não pode jogar aqui, escolha uma nova casa.\n");
+  }
+  }while(x[L][C]!= ' ');
+  x[L][C] = 'O';
+  return 0;
+}
+
+int main(void) {
+  char game[3][3], J1[12], J2[12];
+  int c = 0, l = 0,cont = 0;
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+      game[i][j] = ' ';
+    }
+  }
+
+  printf("Nome jogador 1: ");
+  fgets(J1 , sizeof(J1), stdin);
+  printf("Nome jogador 2: ");
+  fgets(J2 , sizeof(J2), stdin);
+  
+  drawTable(game);
+  do {
+    verifyPlay1(game,J1);
+    cont++;
+    drawTable(game);
+    if (checkWin(game,'X') == 0 && checkWin(game,'O') == 0 && cont < 9) {
+      verifyPlay2(game,J2);
+      cont++;
+      drawTable(game); 
+    }
+  }while(checkWin(game,'X') == 0 && checkWin(game,'O') == 0 && cont < 9);
+  
+  printf("\nJogo finalizado!\n");
+  if (cont == 9 && checkWin(game,'X') == 0 && checkWin(game,'O') == 0 ) {
+    printf("Jogo empatado!");
+  }
+  else if (checkWin(game,'X') == 1 && checkWin(game,'O') == 0 ) {
+    printf("O vencedor é: %s!",J1);
+  }
+  else if (checkWin(game,'O') == 1 && checkWin(game,'X') == 0) {
+    printf("O vencedor é: %s",J2);
+  }
+  
+
+  return 0;
+}
